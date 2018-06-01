@@ -15,9 +15,10 @@
 
 import sys
 import pickle
-sys.path.append("../tools/")
+import numpy
+sys.path.append("tools")
 from feature_format import featureFormat, targetFeatureSplit
-dictionary = pickle.load( open("../final_project/final_project_dataset_modified.pkl", "r") )
+dictionary = pickle.load( open("C:\\code\\udacity_ml_project\\final_project\\final_project_dataset_modified.pkl", "r") )
 
 ### list the features you want to look at--first item in the 
 ### list will be the "target" feature
@@ -29,7 +30,7 @@ target, features = targetFeatureSplit( data )
 from sklearn.cross_validation import train_test_split
 feature_train, feature_test, target_train, target_test = train_test_split(features, target, test_size=0.5, random_state=42)
 train_color = "b"
-test_color = "b"
+test_color = "r"
 
 
 
@@ -38,10 +39,19 @@ test_color = "b"
 ### plots it correctly. Don't forget to change the test_color above from "b" to
 ### "r" to differentiate training points from test points.
 
+from sklearn import linear_model
+reg = linear_model.LinearRegression()
+reg.fit(feature_train, target_train)
 
+pred = reg.predict(feature_test)
 
+import numpy as np
+pred = np.reshape(pred, (-1, 1))
 
+print "score: ", reg.score(pred, target_test)
 
+print "slope = ", reg.coef_
+print "y-intercept = ", reg.intercept_
 
 
 
@@ -64,6 +74,8 @@ try:
     plt.plot( feature_test, reg.predict(feature_test) )
 except NameError:
     pass
+reg.fit(feature_test, target_test)
+plt.plot(feature_train, reg.predict(feature_train), color="b") 
 plt.xlabel(features_list[1])
 plt.ylabel(features_list[0])
 plt.legend()
