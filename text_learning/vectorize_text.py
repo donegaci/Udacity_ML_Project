@@ -1,11 +1,10 @@
-#!/usr/bin/python
 
 import os
 import pickle
 import re
 import sys
 
-sys.path.append( "../tools/" )
+sys.path.insert(0, "C:\\code\\udacity_ml_project\\tools")
 from parse_out_email_text import parseOutText
 
 """
@@ -22,9 +21,8 @@ from parse_out_email_text import parseOutText
     The data is stored in lists and packed away in pickle files at the end.
 """
 
-
-from_sara  = open("from_sara.txt", "r")
-from_chris = open("from_chris.txt", "r")
+from_sara  = open("C:\\code\\udacity_ml_project\\text_learning\\from_sara.txt", "r")
+from_chris = open("C:\\code\\udacity_ml_project\\text_learning\\from_chris.txt", "r")
 
 from_data = []
 word_data = []
@@ -43,33 +41,44 @@ for name, from_person in [("sara", from_sara), ("chris", from_chris)]:
         ### once everything is working, remove this line to run over full dataset
         temp_counter += 1
         if temp_counter < 200:
-            path = os.path.join('..', path[:-1])
+            path = os.path.join('C:\\code\\udacity_ml_project', path[:-1])
             print path
             email = open(path, "r")
 
             ### use parseOutText to extract the text from the opened email
-
+            stemmed_text = parseOutText(email)
             ### use str.replace() to remove any instances of the words
             ### ["sara", "shackleton", "chris", "germani"]
-
+            words_to_remove = ["sara", "shackleton", "chris", "germani"]
+            for word in words_to_remove:
+                stemmed_text.replace(word, "")
             ### append the text to word_data
-
+            word_data.append(stemmed_text)
             ### append a 0 to from_data if email is from Sara, and 1 if email is from Chris
 
 
             email.close()
 
+        if name == "sara":
+            from_data.append(0)
+        elif name == "chris":   
+            from_data.append(1)
+
+
 print "emails processed"
 from_sara.close()
 from_chris.close()
 
+#print from_data
+print word_data[152]
+
 pickle.dump( word_data, open("your_word_data.pkl", "w") )
 pickle.dump( from_data, open("your_email_authors.pkl", "w") )
 
-
-
-
-
 ### in Part 4, do TfIdf vectorization here
 
+from sklearn.feature_extraction.text import TfidfVectorizer
+vect = TfidfVectorizer(stop_words = "english")
+vect.fit_transform(word_data)
 
+print len(vect.get_feature_names())
