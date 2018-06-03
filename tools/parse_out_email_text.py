@@ -28,22 +28,29 @@ def parseOutText(f):
         text_string = content[1].translate(string.maketrans("", ""), string.punctuation)
 
         ### project part 2: comment out the line below
-        words = text_string
+        #words = text_string
 
         ### split the text string into individual words, stem each word,
         ### and append the stemmed word to words (make sure there's a single
         ### space between each stemmed word)
+        from nltk.stem.snowball import SnowballStemmer
+        st = SnowballStemmer("english")
+
+        text_list = []
+        text_list = text_string.split()
+
+        stemmed_text = ""
+
+        for word in text_list:
+            stemmed_text += st.stem(word) + " "
+
         
-
-
-
-
-    return words
+    return stemmed_text
 
     
 
 def main():
-    ff = open("../text_learning/test_email.txt", "r")
+    ff = open("C:\\code\\udacity_ml_project\\text_learning\\test_email.txt", "r")
     text = parseOutText(ff)
     print text
 
