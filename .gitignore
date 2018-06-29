@@ -12,4 +12,6 @@ my_feature_list.pkl
 .vscode/settings.json
 tools/__init__.py
 clusters.pdf
+your_email_authors.pkl
+your_word_data.pkl
 
